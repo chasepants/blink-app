@@ -1,19 +1,30 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 // import socket from 'socket.io-client';
-import {socketHandler} from './services/socket_handler';
-socket.on('connect', function(){
-  alert('Connected to server');
-});
+// import {SocketHandler} from './services/socket_handler';
+import io from 'socket.io-client/dist/socket.io';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Button   title="Blink" onPress={() => {
-        alert('Tapped the button')
-      }}/>
-    </View>
-  );
+
+
+export default class App extends React.Component{
+  state ={
+    socket: null
+  }
+
+  componentDidMount(){
+    socket = io('https://damp-river-33545.herokuapp.com/');
+    this.setState({socket})
+  }
+
+  render(){
+    return (
+      <View style={styles.container}>
+        <Button title='Blink' onPress={()=>{
+          this.state.socket.emit('stateChanged', true);
+        }}/>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
